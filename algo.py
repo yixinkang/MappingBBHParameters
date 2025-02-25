@@ -544,9 +544,9 @@ class MapDegeneracyND:
         data_arrays = {dim: self._fetch_array(data, dim) for dim in self.dimensions}
         
            # Print the data array tags and their dimensions
-        print("Data Arrays Tags and Dimensions:")
-        for key, value in data_arrays.items():
-            print(f"Tag: {key}, Dimension: {len(value)}")
+        # print("Data Arrays Tags and Dimensions:")
+        # for key, value in data_arrays.items():
+        #     print(f"Tag: {key}, Dimension: {len(value)}")
         return parameterspace, data_arrays
 
     def find_mismatch(self):
@@ -587,11 +587,9 @@ class MapDegeneracyND:
     def fit_data(self, data_to_fit):
         if self.fit_type == "GMM":
             mean_prior = self.start
-            print('mean prior', mean_prior)
             g = BayesianGaussianMixture(
                 n_components=1, mean_prior =mean_prior, covariance_type="full")
             GMM = g.fit(data_to_fit)
-            # print("Means:", GMM.means_)
             self.means.append(GMM.means_)
             return GMM
         elif self.fit_type == "PCA":
@@ -612,9 +610,9 @@ class MapDegeneracyND:
             eig_val = eig_val[order]
             eig_vec = eig_vec[:, order]
             
-            for i, (val, vec) in enumerate(zip(eig_val, eig_vec)):
-                print(f"Eigenvalue {i + 1}: {val}")
-                print(f"Corresponding eigenvector: {vec}\n")
+#             for i, (val, vec) in enumerate(zip(eig_val, eig_vec)):
+#                 print(f"Eigenvalue {i + 1}: {val}")
+#                 print(f"Corresponding eigenvector: {vec}\n")
             
             largest = eig_vec.T[0]
             # print('largest eigenvector',largest)
@@ -707,7 +705,7 @@ class MapDegeneracyND:
         
      
 
-    def guess_lam(self, direction):
+    def init_lam(self, direction):
         if self.dims == 2:
             # if self.dimensions == ['q','inplane1']:
             #     q = self.start[0]
@@ -775,7 +773,7 @@ class MapDegeneracyND:
 
     def mismatch_at_point(self, direction):
         lam_old = self.lam
-        self.lam = self.guess_lam(direction)
+        self.lam = self.init_lam(direction)
         
         print("new start at ", self.start)
         self.points.append(self.start)
@@ -785,8 +783,8 @@ class MapDegeneracyND:
         features2 = lam_old + self.lam
         mismatch_prediction_ref = model.predict(features1).flatten()[0]
         mismatch_prediction_pre = model.predict(features2).flatten()[0]
-        print(f"predicted mismatch from reference: {mismatch_prediction_ref}")
-        print(f"predicted mismatch from previous: {mismatch_prediction_pre}")
+        # print(f"predicted mismatch from reference: {mismatch_prediction_ref}")
+        # print(f"predicted mismatch from previous: {mismatch_prediction_pre}")
         print("-----")
 
         self.mismatch_from_reference.append(mismatch_prediction_ref)
