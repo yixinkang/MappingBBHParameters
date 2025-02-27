@@ -209,8 +209,6 @@ def find_theta(z, spin):
         theta = 0
     else:
         theta = np.arccos(z/spin)
-    # if theta < 0:
-    #     theta = np.pi + theta
     return theta
 
 def find_phi(x, y):
@@ -543,10 +541,6 @@ class MapDegeneracyND:
         data = parameterspace.summary()
         data_arrays = {dim: self._fetch_array(data, dim) for dim in self.dimensions}
         
-           # Print the data array tags and their dimensions
-        # print("Data Arrays Tags and Dimensions:")
-        # for key, value in data_arrays.items():
-        #     print(f"Tag: {key}, Dimension: {len(value)}")
         return parameterspace, data_arrays
 
     def find_mismatch(self):
@@ -593,10 +587,8 @@ class MapDegeneracyND:
             self.means.append(GMM.means_)
             return GMM
         elif self.fit_type == "PCA":
-            # Adjust the PCA components to match the number of dimensions
             pca = PCA(n_components=self.dims)
             PCA_model = pca.fit(data_to_fit)
-            # print("Means:", PCA_model.mean_)
             self.means.append(PCA_model.mean_)
             return PCA_model
 
@@ -610,12 +602,7 @@ class MapDegeneracyND:
             eig_val = eig_val[order]
             eig_vec = eig_vec[:, order]
             
-#             for i, (val, vec) in enumerate(zip(eig_val, eig_vec)):
-#                 print(f"Eigenvalue {i + 1}: {val}")
-#                 print(f"Corresponding eigenvector: {vec}\n")
-            
             largest = eig_vec.T[0]
-            # print('largest eigenvector',largest)
             self.eigenvectors.append(largest)
      
         elif self.fit_type == "PCA":
@@ -663,10 +650,7 @@ class MapDegeneracyND:
                 mismatch = self.find_mismatch()
 
                 # 2. Fit the data (GMM or PCA)  
-                
                 data_to_fit, full_data = self.rejection_sampling(mismatch)
-       
-
                 fitted_data = self.fit_data(data_to_fit)
                 
                 # either FORWARD or BACKWARD
@@ -707,24 +691,12 @@ class MapDegeneracyND:
 
     def init_lam(self, direction):
         if self.dims == 2:
-            # if self.dimensions == ['q','inplane1']:
-            #     q = self.start[0]
-            #     eta = q/(1+q)**2
-            #     x1 = self.start[1]
-            #     lam = [eta,x1,0,0,0,0,0]
             if self.dimensions == ['eta','inplane1']:
                 eta = self.start[0]
                 x1 = self.start[1]
                 lam = [eta,x1,0,0,0,0,0]
                 
-       
-            # elif self.dimensions == ['eta','y1']:
-            #     q = self.start[0]
-            #     eta = q/(1+q)**2
-            #     y1 = self.start[1]
-            #     lam = [eta,0,y1,0,0,0,0]
-                
-            else:
+            else: # default setting is ['eta','chi_eff']
                 eta = self.start[0]
                 z1 = self.start[1]
                 z2 = self.start[1]
@@ -736,37 +708,6 @@ class MapDegeneracyND:
                 z1 = self.start[1]
                 z2 = self.start[2]
                 lam = [eta,0,0,z1,0,0,z2]
-        
-
-        elif self.dims == 5:
-            if self.dimensions == ['q','x1','x2','y1','y2']:
-                q = self.start[0]
-                x1, x2 = self.start[1], self.start[3]
-                y1, y2 = self.start[2], self.start[4]
-        
-                eta = q / (1 + q)**2
-                
-                z1,z2 = self.lam0[3],self.lam0[6]
-                
-                lam = [eta, x1, y1, z1, x2, y2, z2]
-                
-            # elif self.dimensions == ['q', 'spin1', 'theta1','phi1','z2']:
-            #     q = self.start[0]
-            #     spin1 =  self.start[1]
-            #     theta1 =  self.start[2]
-            #     phi1 =  self.start[3]
-            #     z2 = self.start[4]
-            #     eta = q/(1+q)**2
-            #     z1 = spin1*np.cos(theta1)
-            #     inplane1 = spin1*np.sin(theta1)
-            #     x1, y1 = inplane1*np.cos(phi1), inplane1*np.sin(phi1)
-            #     lam = [eta, x1, y1, z1, 0, 0, z2]
-                
-            else:
-                q = self.start[0]
-                spin1, spin2 = self.start[1], self.start[2]
-                theta1, theta2 = self.start[3], self.start[4]
-                lam = convert_to_lambda(q,spin1,spin2,theta1,theta2)
                 
         return lam
         
@@ -783,8 +724,6 @@ class MapDegeneracyND:
         features2 = lam_old + self.lam
         mismatch_prediction_ref = model.predict(features1).flatten()[0]
         mismatch_prediction_pre = model.predict(features2).flatten()[0]
-        # print(f"predicted mismatch from reference: {mismatch_prediction_ref}")
-        # print(f"predicted mismatch from previous: {mismatch_prediction_pre}")
         print("-----")
 
         self.mismatch_from_reference.append(mismatch_prediction_ref)
