@@ -21,7 +21,7 @@ The trained models are stored in the following folders:
 
 #### Using the Trained Neural Network
 The **input** to the network consists of a feature array of shape $(N, 14)$, where each row corresponds to a pair of binary black hole systems 
-$[\boldsymbol{\lambda}_1,\boldsymbol{\lambda}_2]$. 
+$[\mathbf{\lambda}_1,\mathbf{\lambda}_2]$. 
 Each **binary system** is characterized by:$\boldsymbol{\lambda}_i = \left\{\eta_i, \vec{\chi}_{1i}, \vec{\chi}_{2i}\right\}$
 where:
 - $\eta_i$ is the **symmetric mass ratio**,
