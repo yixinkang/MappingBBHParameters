@@ -3,7 +3,7 @@ This repository accompanies the paper ["Mapping Parameter Correlations in Binary
 
 
 ## **Contents**
-### Neural networks** trained for mismatch predictions at $30M_\odot, 90M_\odot, 270M_\odot$.
+### **Neural networks** trained for mismatch predictions at $30M_\odot, 90M_\odot, 270M_\odot$.
   - Networks are trained within NRSur7dq4 region of validity:
     - **Mass ratio constraint**: $q \leq 6$ (equivalently $\eta > 6/49 \approx 0.12$).
     - **Spin constraints**: $\chi_i < 1$, $\theta_i \in [0, \pi]$, $\phi_i \in [0, 2\pi]$.
